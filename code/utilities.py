@@ -12,6 +12,7 @@ def convolution(img, kernel, keepdim:bool = True):
     """Computes the convolution of the image and the kernel provided"""
     dimensions = convolution_dimensions(img, kernel)
     conv = np.zeros(tuple(dimensions.tolist()))
+    kernel = np.fliplr(np.flipud(kernel))
     for i in range(dimensions[0]):
         for j in range(dimensions[1]):
             # Here i gotta compute every posirion of the convolution
@@ -44,3 +45,30 @@ def balanced_kernel(center, borders, dim:tuple):
     # Center
     kernel[int(dim[0]/2), int(dim[1]/2)] = center
     return kernel
+
+
+def find_deprecated(detection, percentage_threshold = 0.8):
+    """Returns an array with the indexes that contains a value detection greater than the threshold.
+     The threshold is calculated as percentage_threshold * max(detection) """
+    maximum_detection = np.max(detection)
+    threshold = percentage_threshold * maximum_detection
+    detection_shape = detection.shape
+    indexes = []
+    for i in range(detection_shape[1]-1):
+        for j in range(detection_shape[0]-1):
+            if detection[j,i] > threshold:
+                indexes.append([j,i])
+    return np.array(indexes)
+
+
+def find_by_percentage(detection, percentage_threshold=0.8):
+    """Returns an array with the indexes that contains a value detection greater than the threshold.
+    The threshold is calculated as percentage_threshold * max(detection) """
+    maximum_value = np.max(detection)
+    threshold = maximum_value * percentage_threshold
+    return np.nonzero(detection > threshold)
+    
+def find_by_value(detection, threshold=100):
+    """Returns an array with the indexes that contains a value detection greater than the threshold.
+    The threshold is calculated as percentage_threshold * max(detection) """
+    return np.nonzero(detection > threshold)
