@@ -1,5 +1,5 @@
 import numpy as np
-from numpy.random import randint
+from PIL import Image
 
 def convolution_dimensions(img, kernel):
     """Computes the final dimensions of the convolution with the image and kernel provided"""
@@ -72,3 +72,38 @@ def find_by_value(detection, threshold=100):
     """Returns an array with the indexes that contains a value detection greater than the threshold.
     The threshold is calculated as percentage_threshold * max(detection) """
     return np.nonzero(detection > threshold)
+
+def binarize_img(image_paht:str):
+    """Binarizes the image in the path provided"""
+    imagen = np.array(Image.open(image_paht))
+    dimensions = imagen.shape
+    binary_image = np.zeros((dimensions[0], dimensions[1]))
+    threshold = 255*3/2
+    for i in range(dimensions[0]):
+        for j in range(dimensions[1]):
+            binary_image[i, j] = 0 if np.sum(imagen[i, j, :]) > threshold else 1
+    return binary_image
+
+def eliminate_non_maximum(indices:tuple, neighborhood:int = 5):
+    """Saves only one indez if there is more than one in the neighborhood provided"""
+    indices_list = []
+    x = indices[0]
+    y = indices[1]
+    for i in range(len(x)):
+        for j in range(len(y)):
+            indices_list.append([x[i], y[j]])
+    indices_list = np.array(indices_list)
+    normalized_indices = []
+    for i in range(len(x)):
+        point = indices_list[i,:]
+        if len(normalized_indices) == 0:
+            normalized_indices.append(point)
+        for p in normalized_indices:
+            print(p[0],p[1], point[0], point[1])
+            if abs(point[0] - p[0]) <= neighborhood:
+                print('in')
+                if not abs(point[1] - p[1]) <= neighborhood:
+                    normalized_indices.append(point)
+    return np.array(normalized_indices)
+    
+

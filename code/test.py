@@ -16,3 +16,5 @@ print(filtro)
 fig, ax = plt.subplots()
 plt.imshow(t)
 plt.show()
+
+eliminate_non_maximum(([1,2,3,4], [1,2,3,4]))
