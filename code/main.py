@@ -33,7 +33,7 @@ plt.colorbar(cax=cax)
 plt.show()
 
 # Parte b
-binary_image = binarize_img("imagenes/seis.jpg")
+binary_image = binarize_img("imagenes/ChessBoard.jpg")
 
 
 fig, ax = plt.subplots()
@@ -60,7 +60,7 @@ plt.imshow(diamond_filter)
 plt.subplot(212)
 plt.imshow(conv)
 
-plt.subplots_adjust(bottom=0.1, right=0.8, top=0.9)
+plt.subplots_adjust(bottom=0.1, right=0.8, top=0.7)
 cax = plt.axes([0.85, 0.1, 0.075, 0.8])
 plt.colorbar(cax=cax)
 plt.show()
@@ -74,19 +74,26 @@ ax.set(xlabel='time (s)', ylabel='voltage (mV)',
 ax.grid()
 plt.show()
 
-indices =  find_by_percentage(conv,0.4)
-x = indices[0]
-y = indices[1]
+print('Getting the indices')
+indices =  find_by_percentage(conv, 0.5)
+filter = True
+if filter: 
+    indices = eliminate_non_maximum(indices)
+    x = indices[:, 0]
+    y = indices[:, 1]
+else:
+    x = indices[0]
+    y = indices[1]
 w = pattern.shape[0]
 h = pattern.shape[1]
 
+print('Plotting')
 fig, ax = plt.subplots()
+if filter:
+    ax.set(xlabel= 'x', ylabel ='y', title=f'Número de detecciones = {indices.shape[0]}')
 plt.imshow(binary_image)
 for i in range(len(x)):
     ax.add_patch(patches.Rectangle((y[i],x[i]),h, w, fill=False, edgecolor='red', lw=1))
 plt.show()
 
-print(indices[0].shape)
-
-print(eliminate_non_maximum(indices).shape)
 

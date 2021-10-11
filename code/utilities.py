@@ -8,11 +8,12 @@ def convolution_dimensions(img, kernel):
     conv_image_dimensions = img_dimensions-kernel_dimensions + 1
     return conv_image_dimensions 
 
-def convolution(img, kernel, keepdim:bool = True):
+def convolution(img, kernel, keepdim:bool = True, invert:bool= False):
     """Computes the convolution of the image and the kernel provided"""
     dimensions = convolution_dimensions(img, kernel)
     conv = np.zeros(tuple(dimensions.tolist()))
-    kernel = np.fliplr(np.flipud(kernel))
+    if invert:
+        kernel = np.fliplr(np.flipud(kernel))
     for i in range(dimensions[0]):
         for j in range(dimensions[1]):
             # Here i gotta compute every posirion of the convolution
@@ -85,25 +86,31 @@ def binarize_img(image_paht:str):
     return binary_image
 
 def eliminate_non_maximum(indices:tuple, neighborhood:int = 5):
-    """Saves only one indez if there is more than one in the neighborhood provided"""
+    """Saves only one index if there is more than one in the neighborhood provided"""
     indices_list = []
     x = indices[0]
     y = indices[1]
     for i in range(len(x)):
-        for j in range(len(y)):
-            indices_list.append([x[i], y[j]])
+        indices_list.append([x[i], y[i]])
     indices_list = np.array(indices_list)
     normalized_indices = []
-    for i in range(len(x)):
-        point = indices_list[i,:]
-        if len(normalized_indices) == 0:
-            normalized_indices.append(point)
-        for p in normalized_indices:
-            print(p[0],p[1], point[0], point[1])
-            if abs(point[0] - p[0]) <= neighborhood:
-                print('in')
-                if not abs(point[1] - p[1]) <= neighborhood:
-                    normalized_indices.append(point)
-    return np.array(normalized_indices)
+    normalized_indices.append(indices_list[0,:])
+    for p in indices_list:
+        if not is_in(p, normalized_indices, neighborhood):
+            normalized_indices.append(p)
+    normalized_indices = np.array(normalized_indices)
+    return normalized_indices
+
+
+def is_in(point, points, neighborhood):
+    """Checks if the point is in points, considering the points can be in a neighborhood with the value provided"""
+    x = point[0]
+    y = point[1]
+    for p in points:
+        if abs(x - p[0]) <= neighborhood:
+            if abs(y - p[1]) <= neighborhood:
+                return True
+    return False
+
     
 
