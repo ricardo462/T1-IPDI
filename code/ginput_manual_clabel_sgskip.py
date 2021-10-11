@@ -37,6 +37,7 @@ plt.waitforbuttonpress()
 while True:
     pts = []
     while len(pts) < 3:
+        print(len(pts))
         tellme('Select 3 corners with mouse')
         pts = np.asarray(plt.ginput(3, timeout=-1))
         if len(pts) < 3:
