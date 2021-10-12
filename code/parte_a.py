@@ -13,12 +13,13 @@ l[7, 4:6] = 1
 # Se crea un kernel balanceado de 3x3 con 8 al centro y -1 a los bordes
 kernel = balanced_kernel(8, -1, (3,3))
 
-
+# Se calculan el filtro y la convolucion con la imagen
 filtro = convolution(l, kernel)
 filtro = filtro[2:8, 2:6]
 conv = convolution(l, filtro, True)
 
 
+# Se grafican los resultados
 fig, ax = plt.subplots()
 ax.set(xlabel = 'x', ylabel = 'y', title = f'Imagen de L')
 shw = ax.imshow(l)
