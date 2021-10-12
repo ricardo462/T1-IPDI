@@ -1,0 +1,2 @@
+Es importante que para ver todos los resultados vaya cerrando cada gráfico para ver el siguiente, menos en el caso de la selección del patrón, 
+en donde se tiene que seleccionar los puntos primero y luego cerrar la ventana
